@@ -4,433 +4,513 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Language to Text Conversion</title>
+    <title>Gestura | Real-time AI Interpreter</title>
+    
+    <!-- Professional Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --teal: #0FA3B1;
+            --teal-dark: #0c8691;
+            --blue-light: #B5E2FA;
+            --off-white: #F9F7F3;
+            --beige: #EDDEA4;
+            --orange: #F7A072;
+            --orange-hover: #e08e62;
+            
+            --bg-body: var(--blue-light);
+            --surface: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-radius: 16px;
+            --shadow-soft: 0 10px 30px -10px rgba(15, 163, 177, 0.15);
+            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1400px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--off-white);
+            color: var(--text-primary);
+            height: 100vh;
             overflow: hidden;
-        }
-
-        header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-
-        header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-
-        header p {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            padding: 30px;
-        }
-
-        .video-section, .info-section {
             display: flex;
             flex-direction: column;
-            gap: 15px;
         }
 
-        .video-box {
-            background: #f5f5f5;
-            border-radius: 10px;
+        nav {
+            background: var(--surface);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--teal);
+            letter-spacing: -0.5px;
+        }
+
+        .status-pill {
+            background: #ecfdf5;
+            color: #059669;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(5, 150, 105, 0.1);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .dashboard {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1.3fr 0.9fr;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            max-width: 1800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .vision-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .video-card {
+            background: var(--surface);
+            border-radius: var(--border-radius);
+            padding: 6px;
+            box-shadow: var(--shadow-card);
+            flex: 1;
+            position: relative;
             overflow: hidden;
-            aspect-ratio: 16 / 9;
-            border: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
         }
 
-        .video-box img {
+        .video-header {
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .badge-live {
+            background: #fee2e2;
+            color: #ef4444;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .feeds-container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            background: #0f172a;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .feed-frame {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .feed-frame img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            opacity: 0.95;
         }
 
-        .label {
-            font-size: 0.9em;
-            color: #666;
-            text-transform: uppercase;
-            font-weight: 600;
-            letter-spacing: 1px;
+        .feed-overlay {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            backdrop-filter: blur(4px);
         }
 
-        .output-box {
-            background: #f9f9f9;
-            border-radius: 10px;
-            padding: 20px;
-            border-left: 4px solid #667eea;
+        .intel-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            height: 100%;
         }
 
-        .output-box h3 {
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        #current-symbol {
-            font-size: 3em;
-            font-weight: bold;
-            color: #667eea;
+        .symbol-card {
+            background: var(--surface);
+            border-radius: var(--border-radius);
+            padding: 2rem;
             text-align: center;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            margin: 15px 0;
-            border: 2px solid #667eea;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(15, 163, 177, 0.1);
+            position: relative;
+            overflow: hidden;
         }
 
-        #sentence {
-            font-size: 1.3em;
-            padding: 15px;
-            background: white;
-            border-radius: 8px;
-            min-height: 60px;
-            word-wrap: break-word;
-            border: 2px solid #e0e0e0;
+        .symbol-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--teal);
+        }
+
+        .label-small {
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .current-char {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--teal);
+            line-height: 1;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .output-card {
+            background: var(--surface);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            flex: 1;
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-bubble {
+            background: var(--off-white);
+            flex: 1;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 2px solid #e2e8f0;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+            overflow-y: auto;
+            transition: border-color 0.3s;
+        }
+
+        .chat-bubble.active {
+            border-color: var(--teal);
         }
 
         .suggestions-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
             gap: 10px;
-            margin: 15px 0;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
         }
 
-        .suggestion-btn {
-            padding: 12px;
-            background: #667eea;
-            color: white;
+        .pill-btn {
+            background: var(--beige);
             border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.95em;
+            padding: 10px 20px;
+            border-radius: 50px;
             font-weight: 600;
-            transition: all 0.3s ease;
-            min-height: 45px;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
+            color: #785c0b;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.9rem;
         }
 
-        .suggestion-btn:hover {
-            background: #764ba2;
+        .pill-btn:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 12px rgba(237, 222, 164, 0.6);
         }
 
-        .suggestion-btn:disabled {
-            background: #ccc;
+        .pill-btn:disabled {
+            background: #f1f5f9;
+            color: #cbd5e1;
             cursor: not-allowed;
-            transform: none;
         }
 
-        .controls {
+        .actions-row {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-            margin-top: 20px;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 12px;
+            margin-top: auto;
         }
 
         .btn {
-            padding: 12px 20px;
             border: none;
-            border-radius: 8px;
-            font-size: 1em;
+            padding: 14px;
+            border-radius: 10px;
             font-weight: 600;
+            font-size: 0.95rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .btn-primary {
-            background: #667eea;
+            background: var(--teal);
             color: white;
         }
 
         .btn-primary:hover {
-            background: #764ba2;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary {
-            background: #4caf50;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #45a049;
+            background: var(--teal-dark);
+            transform: translateY(-1px);
         }
 
         .btn-danger {
-            background: #f44336;
-            color: white;
+            background: rgba(247, 160, 114, 0.15);
+            color: #c2410c;
         }
 
         .btn-danger:hover {
-            background: #da190b;
+            background: rgba(247, 160, 114, 0.3);
         }
 
-        .status {
-            padding: 10px 15px;
-            background: #e8f5e9;
-            border-left: 4px solid #4caf50;
-            border-radius: 4px;
-            font-size: 0.9em;
-            color: #2e7d32;
-        }
+        .icon { width: 20px; height: 20px; }
 
-        .status.error {
-            background: #ffebee;
-            border-left-color: #f44336;
-            color: #c62828;
-        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
         @media (max-width: 1024px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-
-            header h1 {
-                font-size: 1.8em;
-            }
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            background: #4caf50;
-            border-radius: 50%;
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            body { height: auto; overflow: auto; }
+            .dashboard { grid-template-columns: 1fr; }
+            .feeds-container { aspect-ratio: 16/9; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🖐️ Sign Language to Text</h1>
-            <p>Real-time hand gesture recognition and conversion to speech</p>
-        </header>
 
-        <div class="main-content">
-            <!-- Video Section -->
-            <div class="video-section">
-                <div>
-                    <p class="label">📹 Webcam Feed</p>
-                    <div class="video-box">
-                        <img id="video-feed" src="/video_feed" alt="Video Feed">
+    <!-- Navbar -->
+    <nav>
+        <div class="brand-logo">
+            <!-- New Gestura icon -->
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
+                <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
+                <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
+                <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path>
+            </svg>
+            <span>Gestura.ai</span>
+        </div>
+        <div class="status-pill" id="connection-badge">
+            <div class="status-dot"></div>
+            <span id="status-text">System Ready</span>
+        </div>
+    </nav>
+
+    <main class="dashboard">
+        
+        <div class="vision-panel">
+            <div class="video-card">
+                <div class="video-header">
+                    <h3 style="font-size:1rem; color: var(--text-secondary);">Live Input</h3>
+                    <span class="badge-live">● LIVE</span>
+                </div>
+                <div class="feeds-container">
+                    <div class="feed-frame">
+                        <img src="/video_feed" alt="Raw Feed">
+                        <div class="feed-overlay">CAM_01</div>
                     </div>
-                </div>
-
-                <div>
-                    <p class="label">✋ Hand Landmarks</p>
-                    <div class="video-box">
-                        <img id="landmarks-feed" src="/landmarks_feed" alt="Landmarks">
+                    <div class="feed-frame">
+                        <img src="/landmarks_feed" alt="Processing">
+                        <div class="feed-overlay">AI_MODEL_V2</div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Info Section -->
-            <div class="info-section">
-                <div class="output-box">
-                    <p class="label">Current Character</p>
-                    <div id="current-symbol">-</div>
-                </div>
-
-                <div class="output-box">
-                    <p class="label">📝 Sentence Output</p>
-                    <div id="sentence"> </div>
-                </div>
-
-                <div class="output-box">
-                    <p class="label">💡 Word Suggestions</p>
-                    <div class="suggestions-grid">
-                        <button class="suggestion-btn" id="word1">-</button>
-                        <button class="suggestion-btn" id="word2">-</button>
-                        <button class="suggestion-btn" id="word3">-</button>
-                        <button class="suggestion-btn" id="word4">-</button>
-                    </div>
-                </div>
-
-                <div class="status" id="status">
-                    <span class="spinner"></span> System initializing...
-                </div>
-
-                <div class="controls">
-                    <button class="btn btn-secondary" onclick="speakEnglish()">🔊 Speak EN</button>
-                    <button class="btn btn-secondary" onclick="speakHindi()">🔊 Speak HI</button>
-                    <button class="btn btn-danger" onclick="clearSentence()">🗑️ Clear</button>
                 </div>
             </div>
         </div>
-    </div>
+
+        <div class="intel-panel">
+            <div class="symbol-card">
+                <div class="label-small">Detected Gesture</div>
+                <div class="current-char" id="current-symbol">-</div>
+            </div>
+
+            <div class="output-card">
+                <div class="label-small" style="margin-bottom: 10px;">Transcription</div>
+                
+                <div class="chat-bubble" id="sentence-box">
+                    <span style="color: #94a3b8; font-style: italic;">Start signing to see translation...</span>
+                </div>
+
+                <div class="label-small" style="margin-top: 10px;">Smart Suggestions</div>
+                <div class="suggestions-grid">
+                    <button class="pill-btn" id="word1">-</button>
+                    <button class="pill-btn" id="word2">-</button>
+                    <button class="pill-btn" id="word3">-</button>
+                    <button class="pill-btn" id="word4">-</button>
+                </div>
+
+                <div class="actions-row">
+                    <button class="btn btn-primary" onclick="speakEnglish()">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                        Speak (EN)
+                    </button>
+                    <button class="btn btn-primary" onclick="speakHindi()">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                        Speak (HI)
+                    </button>
+                    <button class="btn btn-danger" onclick="clearSentence()" title="Clear">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
 
     <script>
         const API_BASE = '/api';
         let updateInterval;
-        let isConnected = false;
+        
+        const elSymbol = document.getElementById('current-symbol');
+        const elSentence = document.getElementById('sentence-box');
+        const statusText = document.getElementById('status-text');
+        const statusBadge = document.getElementById('connection-badge');
+        const statusDot = document.querySelector('.status-dot');
 
         async function updateState() {
             try {
                 const response = await fetch(`${API_BASE}/state`);
-                if (!response.ok) throw new Error('Failed to fetch state');
-
+                if (!response.ok) throw new Error('Network error');
+                
                 const data = await response.json();
 
-                // Update UI elements
-                document.getElementById('current-symbol').textContent = 
-                    data.current_symbol || '-';
-                document.getElementById('sentence').textContent = 
-                    data.sentence || ' ';
-
-                // Update suggestion buttons
-                updateSuggestionButton('word1', data.word1);
-                updateSuggestionButton('word2', data.word2);
-                updateSuggestionButton('word3', data.word3);
-                updateSuggestionButton('word4', data.word4);
-
-                // Update status
-                if (!isConnected) {
-                    setStatus('System ready', false);
-                    isConnected = true;
+                elSymbol.textContent = data.current_symbol || '-';
+                
+                if (!data.sentence || data.sentence.trim() === '') {
+                    elSentence.innerHTML = '<span style="color: #94a3b8; font-style: italic;">Start signing to see translation...</span>';
+                    elSentence.classList.remove('active');
+                } else {
+                    elSentence.textContent = data.sentence;
+                    elSentence.classList.add('active');
                 }
+
+                ['word1', 'word2', 'word3', 'word4'].forEach(id => {
+                    const btn = document.getElementById(id);
+                    const word = data[id];
+                    btn.textContent = word && word.trim() ? word : '...';
+                    btn.disabled = !word || !word.trim();
+                });
+
+                setConnectionStatus(true);
             } catch (error) {
-                console.error('Error updating state:', error);
-                setStatus('Error: ' + error.message, true);
+                setConnectionStatus(false);
             }
         }
 
-        function updateSuggestionButton(buttonId, word) {
-            const btn = document.getElementById(buttonId);
-            btn.textContent = word && word.trim() ? word : '-';
-            btn.disabled = !word || !word.trim();
-        }
-
-        function setStatus(message, isError = false) {
-            const status = document.getElementById('status');
-            status.textContent = message;
-            status.className = 'status' + (isError ? ' error' : '');
+        function setConnectionStatus(isOnline) {
+            if (isOnline) {
+                statusText.textContent = "System Ready";
+                statusBadge.style.background = "#ecfdf5";
+                statusBadge.style.color = "#059669";
+                statusDot.style.background = "#10b981";
+            } else {
+                statusText.textContent = "Reconnecting...";
+                statusBadge.style.background = "#fef2f2";
+                statusBadge.style.color = "#991b1b";
+                statusDot.style.background = "#ef4444";
+            }
         }
 
         async function replacWord(word) {
             if (!word || word === '-') return;
+            await fetch(`${API_BASE}/replace_word`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ word: word })
+            });
+            updateState();
+        }
 
+        async function speak(text, lang) {
+            if (text.includes('Start signing')) return;
+            
+            statusText.textContent = "Generating Audio...";
             try {
-                const response = await fetch(`${API_BASE}/replace_word`, {
+                const response = await fetch(`${API_BASE}/speak`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ word: word })
+                    body: JSON.stringify({ text: text, language: lang })
                 });
-
+                
                 if (response.ok) {
-                    await updateState();
-                    setStatus('Word replaced', false);
+                    const audioBlob = await response.blob();
+                    const audio = new Audio(URL.createObjectURL(audioBlob));
+                    audio.play();
+                    statusText.textContent = "Playing Audio...";
+                    setTimeout(() => setConnectionStatus(true), 2000);
                 }
-            } catch (error) {
-                setStatus('Error replacing word', true);
+            } catch (e) {
+                console.error(e);
+                setConnectionStatus(true);
             }
         }
 
         async function speakEnglish() {
-            const sentence = document.getElementById('sentence').textContent;
-            await speak(sentence, 'en');
+            const text = elSentence.textContent;
+            await speak(text, 'en');
         }
 
         async function speakHindi() {
-            const sentence = document.getElementById('sentence').textContent;
-            await speak(sentence, 'hi');
-        }
-
-        async function speak(text, language) {
-            if (!text || text.trim() === '') {
-                setStatus('No text to speak', true);
-                return;
-            }
-
-            try {
-                setStatus('Generating speech...', false);
-                const response = await fetch(`${API_BASE}/speak`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: text, language: language })
-                });
-
-                if (response.ok) {
-                    const audioBlob = await response.blob();
-                    const audioUrl = URL.createObjectURL(audioBlob);
-                    const audio = new Audio(audioUrl);
-                    audio.play();
-                    setStatus('Playing speech', false);
-                } else {
-                    setStatus('Error generating speech', true);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                setStatus('Error: ' + error.message, true);
-            }
+            const text = elSentence.textContent;
+            await speak(text, 'hi');
         }
 
         async function clearSentence() {
-            try {
-                const response = await fetch(`${API_BASE}/clear`, { method: 'POST' });
-                if (response.ok) {
-                    await updateState();
-                    setStatus('Sentence cleared', false);
-                }
-            } catch (error) {
-                setStatus('Error clearing sentence', true);
-            }
+            await fetch(`${API_BASE}/clear`, { method: 'POST' });
+            updateState();
         }
 
-        // Setup suggestion button onclick handlers
-        document.getElementById('word1').onclick = () => replacWord(document.getElementById('word1').textContent);
-        document.getElementById('word2').onclick = () => replacWord(document.getElementById('word2').textContent);
-        document.getElementById('word3').onclick = () => replacWord(document.getElementById('word3').textContent);
-        document.getElementById('word4').onclick = () => replacWord(document.getElementById('word4').textContent);
-
-        // Initialize
-        window.addEventListener('load', () => {
-            updateState();
-            updateInterval = setInterval(updateState, 500); // Update every 500ms
+        ['word1', 'word2', 'word3', 'word4'].forEach(id => {
+            document.getElementById(id).onclick = function() {
+                replacWord(this.textContent);
+            };
         });
 
-        window.addEventListener('beforeunload', () => {
-            if (updateInterval) clearInterval(updateInterval);
-        });
+        window.onload = () => {
+            updateInterval = setInterval(updateState, 500);
+        };
+        
+        window.onbeforeunload = () => {
+            clearInterval(updateInterval);
+        };
     </script>
 </body>
 </html>
