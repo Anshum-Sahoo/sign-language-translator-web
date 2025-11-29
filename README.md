@@ -28,11 +28,11 @@ Built during a 48-hour hackathon, this project challenges the limits of browser-
 
 ## ⚙️ Installation & Run
 
-1. **Clone the Repository**
+1. **Clone the Repository**:-
 git clone https://github.com/Anshum-Sahoo/sign-language-translator-web.git
 cd sign-language-translator-web
 
-2. **Create a Virtual Environment**
+2. **Create a Virtual Environment** :-
 python -m venv venv
 
 Windows
@@ -41,10 +41,10 @@ Windows
 Mac/Linux
 source venv/bin/activate
 
-3. **Install Dependencies**
+3. **Install Dependencies**:-
 pip install -r requirements.txt
 
-4. **Run the Application**
+4. **Run the Application**:-
 python app.py
 *The app will start at `http://localhost:5000`*
 
