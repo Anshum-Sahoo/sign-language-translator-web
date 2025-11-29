@@ -2,8 +2,8 @@
 > **Real-Time AI Sign Language Interpreter**  
 > *Bridging communication gaps with Computer Vision and Deep Learning.*
 
-![Gestura Dashboard](https://via.placeholder.com/1200x600.png?text=Project+Gestura+Preview)
-*(Add your own screenshot here later!)*
+![Gestura Dashboard]([https://via.placeholder.com/1200x600.png?text=Project+Gestura+Preview](https://github.com/Anshum-Sahoo/sign-language-translator-web/blob/main/Screenshot%202025-11-29%20113027.png))
+
 
 ## 💡 Inspiration
 Communication should be universal. **Gestura** was built to translate sign language gestures into spoken text in real-time, making digital interaction accessible for everyone. 
