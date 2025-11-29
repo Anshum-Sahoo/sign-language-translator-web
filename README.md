@@ -1,8 +1,7 @@
 # Gestura.ai 🖐️
 > **Real-Time AI Sign Language Interpreter**  
 > *Bridging communication gaps with Computer Vision and Deep Learning.*
-
-![Gestura Dashboard]([https://via.placeholder.com/1200x600.png?text=Project+Gestura+Preview](https://github.com/Anshum-Sahoo/sign-language-translator-web/blob/main/Screenshot%202025-11-29%20113027.png))
+[https://via.placeholder.com/1200x600.png?text=Project+Gestura+Preview](https://github.com/Anshum-Sahoo/sign-language-translator-web/blob/main/Screenshot%202025-11-29%20113027.png)
 
 
 ## 💡 Inspiration
