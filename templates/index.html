@@ -165,6 +165,33 @@
             backdrop-filter: blur(4px);
         }
 
+        /* Footer Credits */
+        .credits-footer {
+            margin-top: auto;
+            padding-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .shoutout {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+
+        .shoutout a {
+            color: var(--teal);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .shoutout a:hover { text-decoration: underline; }
+
         .intel-panel {
             display: flex;
             flex-direction: column;
@@ -313,6 +340,7 @@
             body { height: auto; overflow: auto; }
             .dashboard { grid-template-columns: 1fr; }
             .feeds-container { aspect-ratio: 16/9; }
+            .credits-footer { flex-direction: column; gap: 10px; text-align: center; }
         }
     </style>
 </head>
@@ -321,7 +349,7 @@
     <!-- Navbar -->
     <nav>
         <div class="brand-logo">
-            <!-- New Gestura icon -->
+            <!-- Gestura icon -->
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
                 <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
@@ -352,6 +380,14 @@
                     <div class="feed-frame">
                         <img src="/landmarks_feed" alt="Processing">
                         <div class="feed-overlay">AI_MODEL_V2</div>
+                    </div>
+                </div>
+                
+                <!-- NEW: Credits Footer (Visible in Left Panel) -->
+                <div class="credits-footer">
+                    <span>v1.0.4-stable</span>
+                    <div class="shoutout">
+                        Special thanks to <a href="https://github.com/devanshgit" target="_blank">Devansh Git</a> 🚀
                     </div>
                 </div>
             </div>
